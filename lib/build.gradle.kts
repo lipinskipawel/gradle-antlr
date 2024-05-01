@@ -1,14 +1,24 @@
 plugins {
     `java-library`
+    antlr
 }
 
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    testImplementation(libs.junit.jupiter)
+//sourceSets {
+//    main {
+//        java {
+//            srcDirs("generated/java")
+//        }
+//    }
+//}
 
+dependencies {
+    antlr("org.antlr:antlr4:4.13.1")
+
+    testImplementation(libs.junit.jupiter)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
@@ -20,4 +30,10 @@ java {
 
 tasks.named<Test>("test") {
     useJUnitPlatform()
+}
+
+tasks.named<AntlrTask>("generateGrammarSource") {
+    maxHeapSize = "1g"
+//    outputDirectory = file("src/generated/java")
+    arguments = arguments + listOf("-visitor", "-long-messages")
 }
