@@ -4,3 +4,5 @@ plugins {
 
 rootProject.name = "gradle-antlr"
 include("lib")
+include("tutorial-action")
+include("tutorial-visitor")
