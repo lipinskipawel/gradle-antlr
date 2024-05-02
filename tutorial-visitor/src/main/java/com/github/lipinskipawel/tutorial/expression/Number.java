@@ -1,7 +1,7 @@
-package com.github.lipinskipawel.tutorial;
+package com.github.lipinskipawel.tutorial.expression;
 
 public final class Number extends Expression {
-    private final int number;
+    public final int number;
 
     public Number(int number) {
         this.number = number;

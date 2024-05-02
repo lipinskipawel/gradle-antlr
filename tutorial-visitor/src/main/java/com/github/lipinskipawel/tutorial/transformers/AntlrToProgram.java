@@ -2,7 +2,7 @@ package com.github.lipinskipawel.tutorial.transformers;
 
 import com.github.lipinskipawel.tutorial.ExprBaseVisitor;
 import com.github.lipinskipawel.tutorial.ExprParser;
-import com.github.lipinskipawel.tutorial.Program;
+import com.github.lipinskipawel.tutorial.expression.Program;
 
 import java.util.ArrayList;
 import java.util.List;

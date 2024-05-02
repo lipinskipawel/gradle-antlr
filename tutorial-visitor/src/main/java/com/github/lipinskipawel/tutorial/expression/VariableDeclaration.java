@@ -1,4 +1,4 @@
-package com.github.lipinskipawel.tutorial;
+package com.github.lipinskipawel.tutorial.expression;
 
 public final class VariableDeclaration extends Expression {
     public String id;

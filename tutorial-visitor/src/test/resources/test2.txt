@@ -1,5 +1,5 @@
 i: INT = 5
-i: INT = 7
+j: INT = 7
 i
 j
 i + j

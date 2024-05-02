@@ -1,13 +1,13 @@
 package com.github.lipinskipawel.tutorial.transformers;
 
-import com.github.lipinskipawel.tutorial.Addition;
 import com.github.lipinskipawel.tutorial.ExprBaseVisitor;
 import com.github.lipinskipawel.tutorial.ExprParser;
-import com.github.lipinskipawel.tutorial.Expression;
-import com.github.lipinskipawel.tutorial.Multiplication;
-import com.github.lipinskipawel.tutorial.Number;
-import com.github.lipinskipawel.tutorial.Variable;
-import com.github.lipinskipawel.tutorial.VariableDeclaration;
+import com.github.lipinskipawel.tutorial.expression.Addition;
+import com.github.lipinskipawel.tutorial.expression.Expression;
+import com.github.lipinskipawel.tutorial.expression.Multiplication;
+import com.github.lipinskipawel.tutorial.expression.Number;
+import com.github.lipinskipawel.tutorial.expression.Variable;
+import com.github.lipinskipawel.tutorial.expression.VariableDeclaration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ public final class AntlrToExpression extends ExprBaseVisitor<Expression> {
             final var idToken = ctx.ID().getSymbol(); // equivalent to ctx.getChild(0).getSymbol()
             final var line = idToken.getLine();
             final var column = idToken.getCharPositionInLine() + 1;
-            semanticErrors.add("Error: variable " + identifier + " already declared (" + line + ", " + column + ")");
+            semanticErrors.add("Error: variable '" + identifier + "' already declared (" + line + ", " + column + ")");
         } else {
             vars.add(identifier);
         }
@@ -73,7 +73,7 @@ public final class AntlrToExpression extends ExprBaseVisitor<Expression> {
             final var idToken = ctx.ID().getSymbol();
             final var line = idToken.getLine();
             final var column = idToken.getCharPositionInLine() + 1;
-            semanticErrors.add("Error: variable " + identifier + " not declared (" + line + ", " + column + ")");
+            semanticErrors.add("Error: variable '" + identifier + "' not declared (" + line + ", " + column + ")");
         }
         return new Variable(identifier);
     }
