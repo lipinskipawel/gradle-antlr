@@ -4,5 +4,9 @@ plugins {
 
 rootProject.name = "gradle-antlr"
 include("lib")
-include("tutorial-action")
-include("tutorial-visitor")
+
+include(":tutorial:action")
+project(":tutorial:action").projectDir = file("tutorial/action")
+
+include(":tutorial:visitor")
+project(":tutorial:visitor").projectDir = file("tutorial/visitor")

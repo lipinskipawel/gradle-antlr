@@ -12,9 +12,9 @@ import java.io.IOException;
 
 public final class Application {
 
-    // ./gradlew run --args='/../gradle-antlr/tutorial-visitor/src/test/resources/test0.txt'
-    // ./gradlew run --args='/../gradle-antlr/tutorial-visitor/src/test/resources/test1.txt'
-    // ./gradlew run --args='/../gradle-antlr/tutorial-visitor/src/test/resources/test2.txt'
+    // ./gradlew run --args='/../gradle-antlr/tutorial/visitor/src/test/resources/test0.txt'
+    // ./gradlew run --args='/../gradle-antlr/tutorial/visitor/src/test/resources/test1.txt'
+    // ./gradlew run --args='/../gradle-antlr/tutorial/visitor/src/test/resources/test2.txt'
     public static void main(String[] args) {
         if (args.length != 1) {
             System.err.println("Usage: file name");
