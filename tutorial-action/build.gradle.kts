@@ -1,6 +1,9 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
-    `java-library`
+    application
     antlr
+    id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
 repositories {
@@ -21,6 +24,10 @@ java {
     }
 }
 
+application {
+    mainClass.set("com.github.lipinskipawel.tutorial.app.Application")
+}
+
 tasks.named<Test>("test") {
     useJUnitPlatform()
 }
@@ -28,4 +35,12 @@ tasks.named<Test>("test") {
 tasks.named<AntlrTask>("generateGrammarSource") {
     maxHeapSize = "1g"
     arguments = arguments + listOf("-no-listener", "-long-messages")
+}
+
+tasks.withType<ShadowJar> {
+    isZip64 = true
+    mergeServiceFiles()
+    manifest {
+        attributes["Main-Class"] = application.mainClass
+    }
 }
