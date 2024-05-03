@@ -28,4 +28,4 @@ ID : [a-z][a-zA-Z0-9_]* ; // identifier
 NUM : '0' | '-'?[1-9][0-9]* ; // ? - means 0 or none
 INT_TYPE : 'INT' ; // this is keyword
 COMMENT : '--' ~[\r\n]* -> skip ; // ~ - means negation
-WS : [ \t\n]* -> skip ; // white spaces
+WS : [ \t\n]+ -> skip ; // white spaces
