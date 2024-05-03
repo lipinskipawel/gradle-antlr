@@ -3,6 +3,7 @@ package com.github.lipinskipawel.tutorial.app;
 import com.github.lipinskipawel.tutorial.ExprLexer;
 import com.github.lipinskipawel.tutorial.ExprParser;
 import com.github.lipinskipawel.tutorial.expression.ExpressionProcessor;
+import com.github.lipinskipawel.tutorial.listeners.SyntaxError;
 import com.github.lipinskipawel.tutorial.transformers.AntlrToProgram;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -17,27 +18,30 @@ public final class Application {
     public static void main(String[] args) {
         if (args.length != 1) {
             System.err.println("Usage: file name");
+            return;
+        }
+        final var fileName = args[0];
+        final var parser = exprParser(fileName);
+
+        // tell ANTLR to build a parse tree
+        // parse from the start symbol
+        final var antlrAST = parser.prog();
+        if (SyntaxError.HAS_ERROR) {
+            return;
+        }
+
+        // create a visitor for converting the parsed tree into the expression object
+        final var programVisitor = new AntlrToProgram();
+        final var program = programVisitor.visit(antlrAST);
+
+        if (programVisitor.semanticErrors.isEmpty()) {
+            final var expressionProcessor = new ExpressionProcessor(program.expressions);
+            for (var evaluation : expressionProcessor.evaluationResult()) {
+                System.out.println(evaluation);
+            }
         } else {
-            final var fileName = args[0];
-            final var parser = exprParser(fileName);
-
-            // tell ANTLR to build a parse tree
-            // parse from the start symbol
-            final var antlrAST = parser.prog();
-
-            // create a visitor for converting the parsed tree into the expression object
-            final var programVisitor = new AntlrToProgram();
-            final var program = programVisitor.visit(antlrAST);
-
-            if (programVisitor.semanticErrors.isEmpty()) {
-                final var expressionProcessor = new ExpressionProcessor(program.expressions);
-                for (var evaluation : expressionProcessor.evaluationResult()) {
-                    System.out.println(evaluation);
-                }
-            } else {
-                for (var error : programVisitor.semanticErrors) {
-                    System.out.println(error);
-                }
+            for (var error : programVisitor.semanticErrors) {
+                System.out.println(error);
             }
         }
     }
@@ -52,6 +56,10 @@ public final class Application {
             final var lexer = new ExprLexer(input);
             final var tokens = new CommonTokenStream(lexer);
             parser = new ExprParser(tokens);
+
+            // syntax error handling
+            parser.removeErrorListeners();
+            parser.addErrorListener(new SyntaxError());
         } catch (IOException e) {
             System.err.println(e);
         }
