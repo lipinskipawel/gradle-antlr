@@ -3,6 +3,7 @@ plugins {
 }
 
 rootProject.name = "gradle-antlr"
+include("calculator")
 include("lib")
 
 include(":tutorial:action")
