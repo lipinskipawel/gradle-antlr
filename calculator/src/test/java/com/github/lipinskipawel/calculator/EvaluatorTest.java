@@ -1,6 +1,5 @@
 package com.github.lipinskipawel.calculator;
 
-import com.github.lipinskipawel.calculator.transformers.Evaluator;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.assertj.core.api.WithAssertions;
@@ -10,8 +9,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.Map;
 import java.util.stream.Stream;
 
+import static com.github.lipinskipawel.calculator.transformers.Evaluator.evaluator;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
 @DisplayName("Calculator Spec")
@@ -143,7 +144,7 @@ class EvaluatorTest implements WithAssertions {
         final var parser = new CalculatorParser(tokens);
         final var antlrProgram = parser.prog();
 
-        final var calculator = new Evaluator();
+        final var calculator = evaluator(Map.of());
         return calculator.visit(antlrProgram);
     }
 }
