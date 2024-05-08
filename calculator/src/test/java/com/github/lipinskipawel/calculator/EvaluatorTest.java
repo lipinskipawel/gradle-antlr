@@ -5,6 +5,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -136,6 +137,32 @@ class EvaluatorTest implements WithAssertions {
             assertThat(evaluate(input).intValue()).isEqualTo(expectedResult);
         }
     }
+
+    @Nested
+    @DisplayName("Build in const work")
+    class Const {
+
+        @Test
+        @DisplayName("E is working")
+        void const_value() {
+            final var input = "e";
+
+            final var result = evaluate(input);
+
+            assertThat(result.doubleValue()).isEqualTo(2.71);
+        }
+
+        @Test
+        @DisplayName("E is working surrounded with other math operations")
+        void const_value_with_() {
+            final var input = "2 + e - 1";
+
+            final var result = evaluate(input);
+
+            assertThat(result.doubleValue()).isEqualTo(3.71);
+        }
+    }
+
 
     private Number evaluate(String input) {
         final var charStream = CharStreams.fromString(input);

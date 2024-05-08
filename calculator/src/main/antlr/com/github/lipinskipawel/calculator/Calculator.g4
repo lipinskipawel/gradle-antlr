@@ -8,6 +8,7 @@ package com.github.lipinskipawel.calculator;
 INTEGER      : ('-')?[0-9][0-9]*   // maybe not allow numbers like '0123'
              ;
 
+E            : ('E' | 'e') ;
 POW          : ('POW' | 'pow') ;
 SQRT         : ('SQRT' | 'sqrt') ;
 
@@ -27,4 +28,5 @@ expr : expr '*' expr                               # Multiply
      | '(' expr ')'                                # Parenthesis
      | op=(POW | SQRT) '[' expr ']'                # Function
      | IDENTIFIER '(' (expr)* (',' expr)*  ')'     # CustomFunction
+     | E                                           # Const
      ;

@@ -34,28 +34,33 @@ public final class Evaluator extends CalculatorBaseVisitor<Number> {
     public Number visitMultiply(CalculatorParser.MultiplyContext ctx) {
         final var left = visit(ctx.expr(0));
         final var right = visit(ctx.expr(1));
-        return left.intValue() * right.intValue();
+        return left.doubleValue() * right.doubleValue();
     }
 
     @Override
     public Number visitDivide(CalculatorParser.DivideContext ctx) {
         final var left = visit(ctx.expr(0));
         final var right = visit(ctx.expr(1));
-        return left.intValue() / right.intValue();
+        return left.doubleValue() / right.doubleValue();
     }
 
     @Override
     public Number visitAddition(CalculatorParser.AdditionContext ctx) {
         final var left = visit(ctx.expr(0));
         final var right = visit(ctx.expr(1));
-        return left.intValue() + right.intValue();
+        return left.doubleValue() + right.doubleValue();
     }
 
     @Override
     public Number visitSubtraction(CalculatorParser.SubtractionContext ctx) {
         final var left = visit(ctx.expr(0));
         final var right = visit(ctx.expr(1));
-        return left.intValue() - right.intValue();
+        return left.doubleValue() - right.doubleValue();
+    }
+
+    @Override
+    public Number visitConst(CalculatorParser.ConstContext ctx) {
+        return 2.71;
     }
 
     @Override
