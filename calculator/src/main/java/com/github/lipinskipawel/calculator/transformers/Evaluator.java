@@ -6,6 +6,7 @@ import com.github.lipinskipawel.calculator.CalculatorParser;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.github.lipinskipawel.calculator.CalculatorParser.POW;
 import static java.lang.Integer.parseInt;
@@ -14,15 +15,23 @@ import static java.lang.Math.sqrt;
 
 public final class Evaluator extends CalculatorBaseVisitor<Number> {
     private final Map<String, NumberInterface> registeredFunctions;
+    private final List<ConstObject> registeredObjects;
     private final List<String> semanticErrors;
 
-    private Evaluator(Map<String, NumberInterface> registeredFunctions) {
+    private Evaluator(
+            Map<String, NumberInterface> registeredFunctions,
+            List<ConstObject> registeredObjects
+    ) {
         this.registeredFunctions = registeredFunctions;
+        this.registeredObjects = registeredObjects;
         this.semanticErrors = new ArrayList<>();
     }
 
-    public static Evaluator evaluator(Map<String, NumberInterface> registeredFunctions) {
-        return new Evaluator(registeredFunctions);
+    public static Evaluator evaluator(
+            Map<String, NumberInterface> registeredFunctions,
+            List<ConstObject> registeredObjects
+    ) {
+        return new Evaluator(registeredFunctions, registeredObjects);
     }
 
     @Override
@@ -61,6 +70,20 @@ public final class Evaluator extends CalculatorBaseVisitor<Number> {
     @Override
     public Number visitConst(CalculatorParser.ConstContext ctx) {
         return 2.71;
+    }
+
+    @Override
+    public Number visitCustomConst(CalculatorParser.CustomConstContext ctx) {
+        final var objectStructure = ctx.CONST().getText();
+        final var findRegisteredValue = registeredObjects.stream()
+                .map(it -> it.findValue(objectStructure))
+                .flatMap(Optional::stream)
+                .toList();
+        if (findRegisteredValue.isEmpty()) {
+            semanticErrors.add("Error: no object [%s] found".formatted(objectStructure));
+            return 0;
+        }
+        return findRegisteredValue.get(0);
     }
 
     @Override

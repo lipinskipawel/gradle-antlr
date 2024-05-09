@@ -10,6 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -171,7 +172,7 @@ class EvaluatorTest implements WithAssertions {
         final var parser = new CalculatorParser(tokens);
         final var antlrProgram = parser.prog();
 
-        final var calculator = evaluator(Map.of());
+        final var calculator = evaluator(Map.of(), List.of());
         return calculator.visit(antlrProgram);
     }
 }

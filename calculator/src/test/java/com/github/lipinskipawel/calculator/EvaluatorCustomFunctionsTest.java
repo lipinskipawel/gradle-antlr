@@ -59,7 +59,7 @@ final class EvaluatorCustomFunctionsTest implements WithAssertions {
         final var parser = new CalculatorParser(tokens);
         final var antlrProgram = parser.prog();
 
-        final var calculator = evaluator(functions);
+        final var calculator = evaluator(functions, List.of());
         return calculator.visit(antlrProgram);
     }
 }

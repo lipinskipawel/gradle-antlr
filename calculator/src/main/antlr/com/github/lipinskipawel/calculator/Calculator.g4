@@ -12,6 +12,8 @@ E            : ('E' | 'e') ;
 POW          : ('POW' | 'pow') ;
 SQRT         : ('SQRT' | 'sqrt') ;
 
+CONST        : ([a-zA-Z]+'.' (([a-zA-Z]+'.')? | ([a-zA-Z]+)) )* ; // because of IDENTIFIER this regex had to be a bit
+                                                                 // longer. I should re-think custom functions and const
 IDENTIFIER   : [a-zA-Z]+ ;
 WS           : [ \t\r\n]+ -> skip ;
 
@@ -29,4 +31,5 @@ expr : expr '*' expr                               # Multiply
      | op=(POW | SQRT) '[' expr ']'                # Function
      | IDENTIFIER '(' (expr)* (',' expr)*  ')'     # CustomFunction
      | E                                           # Const
+     | CONST                                       # CustomConst
      ;
