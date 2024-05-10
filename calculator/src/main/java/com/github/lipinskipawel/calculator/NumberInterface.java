@@ -1,4 +1,4 @@
-package com.github.lipinskipawel.calculator.transformers;
+package com.github.lipinskipawel.calculator;
 
 import java.util.List;
 

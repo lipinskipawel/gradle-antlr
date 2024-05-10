@@ -1,8 +1,5 @@
 package com.github.lipinskipawel.calculator;
 
-import com.github.lipinskipawel.calculator.transformers.NumberInterface;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,20 +11,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static com.github.lipinskipawel.calculator.transformers.Evaluator.evaluator;
+import static com.github.lipinskipawel.calculator.Calculator.calculatorBuilder;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
 @DisplayName("Calculator with custom function spec")
-final class EvaluatorCustomFunctionsTest implements WithAssertions {
+final class CalculatorCustomFunctionsTest implements WithAssertions {
 
     @Test
     @DisplayName("register custom function with zero arguments")
     void allow_functions_with_zero_args() {
         final var input = "size()";
+        final var calculate = calculatorBuilder()
+                .registeredFunctions(Map.of(
+                        "size", List::size
+                ))
+                .build();
 
-        final var result = evaluate(input, Map.of(
-                "size", List::size
-        ));
+        final var result = calculate.calculate(input);
 
         assertThat(result.intValue()).isEqualTo(0);
     }
@@ -45,21 +45,14 @@ final class EvaluatorCustomFunctionsTest implements WithAssertions {
     @MethodSource("customFunctions")
     @DisplayName("register custom function with many arguments")
     void register_custom_function(String input, int expectedResult) {
-        final var result = evaluate(input, Map.of(
-                "size", List::size
-        ));
+        final var calculate = calculatorBuilder()
+                .registeredFunctions(Map.of(
+                        "size", List::size
+                ))
+                .build();
+
+        final var result = calculate.calculate(input);
 
         assertThat(result.intValue()).isEqualTo(expectedResult);
-    }
-
-    private Number evaluate(String input, Map<String, NumberInterface> functions) {
-        final var charStream = CharStreams.fromString(input);
-        final var lexer = new CalculatorLexer(charStream);
-        final var tokens = new CommonTokenStream(lexer);
-        final var parser = new CalculatorParser(tokens);
-        final var antlrProgram = parser.prog();
-
-        final var calculator = evaluator(functions, List.of());
-        return calculator.visit(antlrProgram);
     }
 }

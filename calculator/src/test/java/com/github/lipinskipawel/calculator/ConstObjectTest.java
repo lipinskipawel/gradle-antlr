@@ -1,11 +1,11 @@
-package com.github.lipinskipawel.calculator.transformers;
+package com.github.lipinskipawel.calculator;
 
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static com.github.lipinskipawel.calculator.transformers.ConstObject.constObject;
+import static com.github.lipinskipawel.calculator.ConstObject.constObject;
 
 @DisplayName("ConstObject spec")
 class ConstObjectTest implements WithAssertions {

@@ -1,7 +1,5 @@
 package com.github.lipinskipawel.calculator;
 
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -10,15 +8,29 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
-import static com.github.lipinskipawel.calculator.transformers.Evaluator.evaluator;
+import static com.github.lipinskipawel.calculator.Calculator.calculatorBuilder;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
 @DisplayName("Calculator Spec")
-class EvaluatorTest implements WithAssertions {
+class CalculatorTest implements WithAssertions {
+
+    private final Calculator calculate = calculatorBuilder().build();
+
+    @Test
+    @DisplayName("throws error on any semantic error reported")
+    void throws_error_when_semantic_errors_present() {
+        final var input = "size(5)";
+
+        final var throwable = catchThrowable(() -> calculate.calculate(input));
+
+        assertThat(throwable)
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("""
+                        Semantic errors detected
+                        Error: function [size] does not exists""");
+    }
 
     @Nested
     @DisplayName("Adding always add numbers")
@@ -36,7 +48,7 @@ class EvaluatorTest implements WithAssertions {
         @MethodSource("zeroTests")
         @DisplayName("zero will not add anything")
         void zero_will_not_add_anything(String input, int expectedResult) {
-            assertThat(evaluate(input).intValue()).isEqualTo(expectedResult);
+            assertThat(calculate.calculate(input).intValue()).isEqualTo(expectedResult);
         }
 
         private static Stream<Arguments> twoNumbers() {
@@ -51,7 +63,7 @@ class EvaluatorTest implements WithAssertions {
         @MethodSource("twoNumbers")
         @DisplayName("two numbers will result with the sum of then")
         void two_numbers_added_then_result_is_sum(String input, int expectedResult) {
-            final var result = evaluate(input);
+            final var result = calculate.calculate(input);
 
             assertThat(result.intValue()).isEqualTo(expectedResult);
         }
@@ -68,7 +80,7 @@ class EvaluatorTest implements WithAssertions {
         @MethodSource("threeNumbers")
         @DisplayName("three numbers will result with the sum of then")
         void three_numbers_added_then_result_is_sum(String input, int expectedResult) {
-            final var result = evaluate(input);
+            final var result = calculate.calculate(input);
 
             assertThat(result.intValue()).isEqualTo(expectedResult);
         }
@@ -84,7 +96,7 @@ class EvaluatorTest implements WithAssertions {
         @MethodSource("negativeNumbers")
         @DisplayName("negative numbers will be added correctly")
         void negative_numbers_added_correctly(String input, int expectedResult) {
-            assertThat(evaluate(input).intValue()).isEqualTo(expectedResult);
+            assertThat(calculate.calculate(input).intValue()).isEqualTo(expectedResult);
         }
     }
 
@@ -99,7 +111,7 @@ class EvaluatorTest implements WithAssertions {
     @MethodSource("order")
     @DisplayName("Follow math order for parentheses")
     void follow_math_order_of_parentheses(String input, int expectedResult) {
-        assertThat(evaluate(input).intValue()).isEqualTo(expectedResult);
+        assertThat(calculate.calculate(input).intValue()).isEqualTo(expectedResult);
     }
 
     @Nested
@@ -117,7 +129,7 @@ class EvaluatorTest implements WithAssertions {
         @MethodSource("functions")
         @DisplayName("Single invocation of functions")
         void single_invocation(String input, int expectedResult) {
-            assertThat(evaluate(input).intValue()).isEqualTo(expectedResult);
+            assertThat(calculate.calculate(input).intValue()).isEqualTo(expectedResult);
         }
 
         private static Stream<Arguments> functionsWithExpression() {
@@ -135,7 +147,7 @@ class EvaluatorTest implements WithAssertions {
         @MethodSource("functionsWithExpression")
         @DisplayName("with additional expression")
         void function_with_expression(String input, int expectedResult) {
-            assertThat(evaluate(input).intValue()).isEqualTo(expectedResult);
+            assertThat(calculate.calculate(input).intValue()).isEqualTo(expectedResult);
         }
     }
 
@@ -148,7 +160,7 @@ class EvaluatorTest implements WithAssertions {
         void const_value() {
             final var input = "e";
 
-            final var result = evaluate(input);
+            final var result = calculate.calculate(input);
 
             assertThat(result.doubleValue()).isEqualTo(2.71);
         }
@@ -158,21 +170,9 @@ class EvaluatorTest implements WithAssertions {
         void const_value_with_() {
             final var input = "2 + e - 1";
 
-            final var result = evaluate(input);
+            final var result = calculate.calculate(input);
 
             assertThat(result.doubleValue()).isEqualTo(3.71);
         }
-    }
-
-
-    private Number evaluate(String input) {
-        final var charStream = CharStreams.fromString(input);
-        final var lexer = new CalculatorLexer(charStream);
-        final var tokens = new CommonTokenStream(lexer);
-        final var parser = new CalculatorParser(tokens);
-        final var antlrProgram = parser.prog();
-
-        final var calculator = evaluator(Map.of(), List.of());
-        return calculator.visit(antlrProgram);
     }
 }

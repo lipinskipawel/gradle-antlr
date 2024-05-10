@@ -1,7 +1,4 @@
-package com.github.lipinskipawel.calculator.transformers;
-
-import com.github.lipinskipawel.calculator.CalculatorBaseVisitor;
-import com.github.lipinskipawel.calculator.CalculatorParser;
+package com.github.lipinskipawel.calculator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,25 +10,18 @@ import static java.lang.Integer.parseInt;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
-public final class Evaluator extends CalculatorBaseVisitor<Number> {
+final class Evaluator extends CalculatorBaseVisitor<Number> {
     private final Map<String, NumberInterface> registeredFunctions;
     private final List<ConstObject> registeredObjects;
-    private final List<String> semanticErrors;
+    final List<String> semanticErrors;
 
-    private Evaluator(
+    Evaluator(
             Map<String, NumberInterface> registeredFunctions,
             List<ConstObject> registeredObjects
     ) {
         this.registeredFunctions = registeredFunctions;
         this.registeredObjects = registeredObjects;
         this.semanticErrors = new ArrayList<>();
-    }
-
-    public static Evaluator evaluator(
-            Map<String, NumberInterface> registeredFunctions,
-            List<ConstObject> registeredObjects
-    ) {
-        return new Evaluator(registeredFunctions, registeredObjects);
     }
 
     @Override
