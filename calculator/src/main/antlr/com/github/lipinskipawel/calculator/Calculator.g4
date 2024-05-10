@@ -1,9 +1,5 @@
 grammar Calculator;
 
-@header {
-package com.github.lipinskipawel.calculator;
-}
-
 // Tokens
 INTEGER      : ('-')?[0-9][0-9]*   // maybe not allow numbers like '0123'
              ;
