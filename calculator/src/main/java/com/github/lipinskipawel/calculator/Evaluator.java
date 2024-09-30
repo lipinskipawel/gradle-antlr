@@ -10,7 +10,7 @@ import static java.lang.Integer.parseInt;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
-final class Evaluator extends CalculatorBaseVisitor<Number> {
+final class Evaluator extends CalculatorParserBaseVisitor<Number> {
     private final Map<String, NumberInterface> registeredFunctions;
     private final List<ConstObject> registeredObjects;
     final List<String> semanticErrors;

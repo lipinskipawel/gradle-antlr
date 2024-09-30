@@ -27,6 +27,7 @@ tasks.named<Test>("test") {
 
 tasks.named<AntlrTask>("generateGrammarSource") {
     maxHeapSize = "1g"
+    outputDirectory = File(outputDirectory, "com/github/lipinskipawel/calculator")
     arguments = arguments + listOf(
         "-visitor",
         "-long-messages",
